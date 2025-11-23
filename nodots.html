@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finde die Unterschiede – Türchen 10</title>
+
+  <!-- Festive Calligraphy Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding-top: 20px;
+      background: linear-gradient(#f8f8f8, #d8e3f0);
+      background-image:
+        url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Ctext x="10" y="55" font-size="20" fill="%23e0e0e0"%3E✻%3C/text%3E%3C/svg%3E'),
+        url('data:image/svg+xml,%3Csvg width="120" height="120" xmlns="http://www.w3.org/2000/svg"%3E%3Ctext x="15" y="65" font-size="22" fill="%23f2d4d4"%3E✦%3C/text%3E%3C/svg%3E');
+      background-repeat: repeat;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3rem;
+      color: #b30000;
+      margin: 0;
+      text-shadow: 0 0 4px rgba(255,255,255,0.7);
+      text-align: center;
+    }
+
+    h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: #b30000;
+      margin: 0;
+      text-shadow: 0 0 4px rgba(255,255,255,0.7);
+      text-align: center;
+    }
+
+    /* Snowflakes */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 20px;
+      opacity: 0.75;
+      animation: fall linear infinite;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh); }
+    }
+
+    /* Top info bar */
+    #infoBar {
+      margin-top: 15px;
+      font-size: 17px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .miniLabel {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.15);
+      font-size: 16px;
+    }
+
+    .miniLabel svg {
+      width: 18px;
+      height: 18px;
+      stroke: #b30000;
+      stroke-width: 2;
+    }
+
+    /* Instructions */
+    #instructions {
+      margin-top: 15px;
+      background: rgba(255,255,255,0.9);
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      max-width: 90vw;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    /* Images container */
+    #frame {
+      padding: 15px;
+      border: 8px solid #b30000;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      margin-top: 20px;
+      transition: all 0.8s ease;
+      max-width: 1200px;
+      width: 95vw;
+    }
+
+    #imagesContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .imageBox {
+      background: rgba(255,255,255,0.95);
+      border-radius: 14px;
+      padding: 10px 10px 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .imageLabel {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #b30000;
+    }
+
+    .imageLabel span.icon {
+      font-size: 16px;
+    }
+
+    .imageInner {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .imageInner img {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+
+    /* Right image hotspots (differences) */
+    #rightImageInner .diffHotspot {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px dashed rgba(255,255,255,0.8);
+      box-shadow: 0 0 8px rgba(0,0,0,0.35);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(212,175,55,0.9), transparent 65%);
+      opacity: 0.95;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, opacity 0.3s ease;
+    }
+
+    #rightImageInner .diffHotspot:hover {
+      transform: translate(-50%, -50%) scale(1.12);
+      box-shadow: 0 0 12px rgba(0,0,0,0.45);
+    }
+
+    #rightImageInner .diffHotspot.found {
+      border-style: solid;
+      border-color: #008000;
+      box-shadow: 0 0 10px rgba(0,128,0,0.9);
+      background: radial-gradient(circle, rgba(0,128,0,0.4), transparent 65%);
+      opacity: 1;
+      animation: foundPulse 0.8s ease-out;
+    }
+
+    @keyframes foundPulse {
+      0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+      60%  { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* Responsive layout: side-by-side on larger screens */
+    @media (min-width: 800px) {
+      #imagesContainer {
+        flex-direction: row;
+      }
+
+      .imageBox {
+        flex: 1;
+      }
+    }
+
+    /* Win message */
+    #winMessage {
+      margin-top: 18px;
+      background: rgba(255,255,255,0.94);
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 17px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: all 0.8s ease;
+      display: none;
+      text-align: center;
+      max-width: 92vw;
+    }
+
+    #winMessage h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.3rem;
+      margin: 0;
+      background: linear-gradient(45deg, #b30000, #d4af37, #008000);
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 7px rgba(255,255,255,0.7);
+      animation: winPop 0.9s ease-out forwards, glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes winPop {
+      0%   { transform: scale(0.5) rotate(-6deg); opacity: 0; }
+      60%  { transform: scale(1.12) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes glow {
+      0%   { text-shadow: 0 0 6px rgba(255,255,255,0.6); }
+      100% { text-shadow: 0 0 12px rgba(255,255,255,1); }
+    }
+
+    #restartButton {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: #b30000;
+      color: white;
+      border: none;
+      font-size: 17px;
+      cursor: pointer;
+      margin-top: 10px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.7s ease, transform 0.7s ease, background 0.2s ease;
+    }
+
+    #restartButton:hover {
+      background: #d00000;
+    }
+
+    @keyframes confettiFadeOut {
+      from { opacity: 1; }
+      to   { opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Confetti canvas -->
+  <canvas id="confettiCanvas"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+           pointer-events: none; z-index: 999999; display: none;"></canvas>
+
+  <h1>Felice Adventskalender</h1>
+  <h2>Türchen 10 🔍✨</h2>
+
+  <!-- Falling snow -->
+  <script>
+    for (let i = 0; i < 20; i++) {
+      const f = document.createElement('div');
+      f.className = 'snowflake';
+      f.textContent = '❅';
+      f.style.left = Math.random() * 100 + 'vw';
+      f.style.animationDuration = 5 + Math.random() * 5 + 's';
+      f.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(f);
+    }
+  </script>
+
+  <div id="infoBar">
+    <div class="miniLabel">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9"></circle>
+        <line x1="12" y1="12" x2="12" y2="7"></line>
+        <line x1="12" y1="12" x2="15" y2="12"></line>
+      </svg>
+      <span id="timer">0</span>s
+    </div>
+
+    <div class="miniLabel">
+      <svg viewBox="0 0 24 24" fill="none">
+        <polyline points="8 6 2 12 8 18"></polyline>
+        <polyline points="16 6 22 12 16 18"></polyline>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+      </svg>
+      <span id="foundCount">0</span> / <span id="totalCount">0</span> Unterschiede
+    </div>
+  </div>
+
+  <div id="instructions">
+    Finde alle Unterschiede zwischen den beiden Bildern. ✨<br />
+    Tippe auf die Stellen im rechten Bild, an denen sich etwas verändert hat.
+  </div>
+
+  <div id="frame">
+    <div id="imagesContainer">
+
+      <div class="imageBox">
+        <div class="imageLabel">
+          <span class="icon">👈</span>
+          <span>Original</span>
+        </div>
+        <div class="imageInner" id="leftImageInner">
+          <!-- Use your converted image file here -->
+          <img src="IMG_3454.HEIC" alt="Originalbild" />
+        </div>
+      </div>
+
+      <div class="imageBox">
+        <div class="imageLabel">
+          <span class="icon">👉</span>
+          <span>Mit Unterschieden</span>
+        </div>
+        <div class="imageInner" id="rightImageInner">
+          <!-- Same image, differences are overlays on top -->
+          <img src="IMG_3454.HEIC" alt="Bild mit Unterschieden" />
+          <!-- Hotspots will be injected here by JavaScript -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="winMessage">
+    <h2>Geschafft! 🎄</h2>
+    <p>Du hast alle Unterschiede entdeckt. Sei gespannt auf das nächste Türchen! ✨</p>
+    <button id="restartButton" onclick="restartGame()">Nochmal spielen</button>
+  </div>
+
+  <script>
+    /* ==========================
+       CONFETTI ENGINE
+    ========================== */
+
+    const confettiCanvas = document.getElementById("confettiCanvas");
+    const ctx = confettiCanvas.getContext("2d");
+    let confettiPieces = [];
+    let confettiActive = false;
+
+    function startConfetti() {
+      confettiActive = true;
+      confettiCanvas.style.display = "block";
+      resizeCanvas();
+      createConfetti();
+      requestAnimationFrame(updateConfetti);
+
+      setTimeout(() => fadeOutConfetti(), 2000);
+    }
+
+    function fadeOutConfetti() {
+      confettiCanvas.style.animation = "confettiFadeOut 2.5s forwards";
+      setTimeout(() => {
+        stopConfetti();
+        confettiCanvas.style.animation = "";
+      }, 2100);
+    }
+
+    function stopConfetti() {
+      confettiActive = false;
+      confettiPieces = [];
+      confettiCanvas.style.display = "none";
+    }
+
+    function resizeCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+
+    function createConfetti() {
+      const colors = ["#b30000", "#d4af37", "#ffffff", "#008000"];
+
+      for (let i = 0; i < 260; i++) {
+        confettiPieces.push({
+          x: Math.random() * confettiCanvas.width,
+          y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+          size: Math.random() * 7 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speed: Math.random() * 3 + 1.5,
+          angle: Math.random() * Math.PI * 2,
+          spin: Math.random() * 0.12 - 0.06
+        });
+      }
+    }
+
+    function updateConfetti() {
+      if (!confettiActive) return;
+
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+      confettiPieces.forEach(p => {
+        p.y += p.speed;
+        p.angle += p.spin;
+
+        ctx.fillStyle = p.color;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      });
+
+      confettiPieces = confettiPieces.filter(p => p.y < confettiCanvas.height);
+
+      requestAnimationFrame(updateConfetti);
+    }
+
+    /* ==========================
+       GAME LOGIC
+    ========================== */
+
+    const timerEl = document.getElementById("timer");
+    const foundEl = document.getElementById("foundCount");
+    const totalEl = document.getElementById("totalCount");
+    const winMessage = document.getElementById("winMessage");
+    const restartBtn = document.getElementById("restartButton");
+    const rightImageInner = document.getElementById("rightImageInner");
+
+    let startTime = null;
+    let timerInt = null;
+    let foundCount = 0;
+
+    // Define hotspot positions as percentages of the image (works responsively)
+    // You can adjust these if you want the differences in other places.
+    const differences = [
+      { id: 1, top: "18%", left: "24%", found: false },
+      { id: 2, top: "32%", left: "68%", found: false },
+      { id: 3, top: "46%", left: "40%", found: false },
+      { id: 4, top: "60%", left: "82%", found: false },
+      { id: 5, top: "72%", left: "18%", found: false },
+      { id: 6, top: "82%", left: "52%", found: false },
+      { id: 7, top: "28%", left: "50%", found: false },
+      { id: 8, top: "54%", left: "12%", found: false }
+    ];
+
+    function initGame() {
+      // Reset
+      foundCount = 0;
+      foundEl.textContent = "0";
+      totalEl.textContent = differences.length.toString();
+      startTime = null;
+      if (timerInt) clearInterval(timerInt);
+      timerInt = null;
+      timerEl.textContent = "0";
+
+      winMessage.style.display = "none";
+      winMessage.style.opacity = "0";
+      restartBtn.style.opacity = "0";
+      restartBtn.style.transform = "translateY(8px)";
+
+      // Clear old hotspots if any
+      const oldHotspots = rightImageInner.querySelectorAll(".diffHotspot");
+      oldHotspots.forEach(h => h.remove());
+
+      // Reset difference state
+      differences.forEach(d => { d.found = false; });
+
+      // Create hotspots
+      differences.forEach(diff => {
+        const el = document.createElement("div");
+        el.className = "diffHotspot";
+        el.style.top = diff.top;
+        el.style.left = diff.left;
+        el.dataset.id = diff.id;
+        el.addEventListener("click", onHotspotClick);
+        diff.element = el;
+        rightImageInner.appendChild(el);
+      });
+    }
+
+    function startTimer() {
+      startTime = Date.now();
+      timerInt = setInterval(() => {
+        timerEl.textContent = Math.floor((Date.now() - startTime) / 1000);
+      }, 1000);
+    }
+
+    function onHotspotClick(e) {
+      const id = parseInt(e.currentTarget.dataset.id, 10);
+      const diff = differences.find(d => d.id === id);
+      if (!diff || diff.found) return;
+
+      if (!startTime) {
+        startTimer();
+      }
+
+      diff.found = true;
+      e.currentTarget.classList.add("found");
+      foundCount++;
+      foundEl.textContent = foundCount.toString();
+
+      // All found?
+      if (foundCount === differences.length) {
+        onWin();
+      }
+    }
+
+    function onWin() {
+      if (timerInt) clearInterval(timerInt);
+
+      if (navigator.vibrate) {
+        navigator.vibrate(160);
+      }
+
+      startConfetti();
+
+      winMessage.style.display = "block";
+      setTimeout(() => {
+        winMessage.style.opacity = "1";
+        winMessage.style.transform = "translateY(0)";
+      }, 60);
+
+      setTimeout(() => {
+        restartBtn.style.opacity = "1";
+        restartBtn.style.transform = "translateY(0)";
+      }, 500);
+    }
+
+    function restartGame() {
+      initGame();
+      stopConfetti();
+    }
+
+    // Expose restartGame for button
+    window.restartGame = restartGame;
+
+    // Init on load
+    initGame();
+  </script>
+
+</body>
+</html>
